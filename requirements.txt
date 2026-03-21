@@ -1,0 +1,20 @@
+# LLM Runtime Detector Dependencies
+# Core requirements
+pyyaml>=6.0
+requests>=2.28.0
+
+# Optional: for enhanced security features
+cryptography>=40.0.0
+
+# Development and testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Code quality (optional)
+flake8>=6.0.0
+black>=23.0.0
+mypy>=1.0.0
+
+# Documentation (optional)
+mkdocs>=1.4.0
+mkdocs-material>=9.0.0

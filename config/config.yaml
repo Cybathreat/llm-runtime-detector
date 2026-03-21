@@ -1,0 +1,67 @@
+# LLM Runtime Detector Configuration
+# Default security scanning settings
+
+# Model Loading Scanner
+model_loading:
+  max_model_size_mb: 50000  # Maximum allowed model size in MB
+  allowed_extensions:
+    - .bin
+    - .safetensors
+    - .pt
+    - .pth
+    - .onnx
+    - .gguf
+  check_symlinks: true
+  verify_permissions: true
+
+# Inference Attack Detector
+inference_attack:
+  sensitivity: medium  # low, medium, high
+  detect_prompt_injection: true
+  detect_jailbreaks: true
+  detect_system_prompt_extraction: true
+  detect_adversarial_suffixes: true
+  detect_token_smuggling: true
+  max_input_length: 10000  # Maximum input length to analyze
+
+# Memory Safety Validator
+memory_safety:
+  read_chunk_size: 1048576  # 1MB chunks for hashing
+  validate_format_structure: true
+  check_suspicious_bytes: true
+  supported_formats:
+    - .bin
+    - .safetensors
+    - .pt
+    - .pth
+    - .gguf
+
+# API Hardening Checker
+api_hardening:
+  require_https: true
+  required_headers:
+    - x-content-type-options
+    - x-frame-options
+    - strict-transport-security
+    - content-security-policy
+  require_authentication: true
+  require_rate_limiting: true
+  max_cors_origins: 10
+  disallow_wildcard_cors: true
+
+# Output Settings
+output:
+  default_format: text  # text, json, markdown
+  include_timestamps: true
+  verbose_errors: false
+
+# Logging
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Security Thresholds
+thresholds:
+  critical_issue_fail: true  # Fail scan if critical issues found
+  high_issue_warn: true      # Warn if high issues found
+  minimum_security_score: 80  # Minimum score for "hardened" status
