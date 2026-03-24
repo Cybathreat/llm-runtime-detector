@@ -49,12 +49,21 @@ class ModelLoadingScanner:
         issues = []
         path = Path(model_path)
 
+        # Check for path traversal attempts (before existence check)
+        if '..' in model_path:
+            issues.append({
+                "type": "path_traversal",
+                "severity": "high",
+                "message": "Path traversal sequence detected",
+                "recommendation": "Sanitize model path inputs"
+            })
+
         # Check if path exists
         if not path.exists():
             return ModelLoadingResult(
                 model_path=model_path,
                 is_safe=False,
-                issues=[{"type": "path_not_found", "severity": "critical", "message": f"Path does not exist: {model_path}"}],
+                issues=[{"type": "path_not_found", "severity": "critical", "message": f"Path does not exist: {model_path}"}] + issues,
                 hash_verified=False,
                 permissions_ok=False,
                 symlink_detected=False,
@@ -125,14 +134,7 @@ class ModelLoadingScanner:
                     "recommendation": "Model may have been tampered with"
                 })
 
-        # Check for path traversal attempts
-        if '..' in model_path:
-            issues.append({
-                "type": "path_traversal",
-                "severity": "high",
-                "message": "Path traversal sequence detected",
-                "recommendation": "Sanitize model path inputs"
-            })
+        # Path traversal check already done at start of method
 
         is_safe = len([i for i in issues if i.get('severity') in ['critical', 'high']]) == 0
 
