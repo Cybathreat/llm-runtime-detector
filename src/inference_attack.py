@@ -23,6 +23,8 @@ class AttackType(Enum):
     CONTEXT_OVERFLOW = "context_overflow"
     SYSTEM_PROMPT_EXTRACTION = "system_prompt_extraction"
     ROLE_PLAYING_ESCAPE = "role_playing_escape"
+    EMOJI_OBFUSCATION = "emoji_obfuscation"
+    BASE64_PAYLOAD = "base64_payload"
 
 
 @dataclass
@@ -88,6 +90,15 @@ class InferenceAttackDetector:
                 r"\\\\u[0-9a-f]{4}",
                 r"base64:",
                 r"rot13:",
+            ],
+            AttackType.EMOJI_OBFUSCATION.value: [
+                r"[\U0001F600-\U0001F64F]{5,}",
+                r"[\U0001F300-\U0001F5FF]{5,}",
+                r"[\U0001F680-\U0001F6FF]{5,}",
+                r"[\U0001F1E0-\U0001F1FF]{5,}",
+            ],
+            AttackType.BASE64_PAYLOAD.value: [
+                r"(?:[A-Za-z0-9+/]{4}){10,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?",
             ],
         }
 
@@ -232,8 +243,8 @@ class InferenceAttackDetector:
 
     def _get_timestamp(self) -> str:
         """Get current timestamp in ISO format."""
-        from datetime import datetime
-        return datetime.utcnow().isoformat() + 'Z'
+        from datetime import datetime, timezone
+        return datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
 
     def analyze_batch(self, inputs: List[str]) -> List[InferenceAttackResult]:
         """Analyze multiple inputs."""
