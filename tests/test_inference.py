@@ -132,6 +132,22 @@ class TestInferenceAttackDetector(unittest.TestCase):
         # High sensitivity should detect more patterns
         self.assertIsInstance(result, InferenceAttackResult)
 
+    def test_unicode_confusables_detection(self):
+        """Test detection of unicode confusable characters."""
+        # Cyrillic characters mixed with Latin
+        confusable_input = "Visit our website: раураl.com"  # Cyrillic 'р', 'а', 'у'
+        result = self.detector.detect(confusable_input)
+        self.assertTrue(result.attack_detected)
+        self.assertIn(AttackType.UNICODE_CONFUSABLES.value, result.attack_types)
+
+    def test_homograph_attack_detection(self):
+        """Test detection of homograph attacks."""
+        # Known homograph patterns
+        homograph_input = "Login to gооgle.com with your сredentials"  # Cyrillic 'о', 'с'
+        result = self.detector.detect(homograph_input)
+        self.assertTrue(result.attack_detected)
+        self.assertIn(AttackType.HOMOGRAPH_ATTACK.value, result.attack_types)
+
 
 if __name__ == '__main__':
     unittest.main()

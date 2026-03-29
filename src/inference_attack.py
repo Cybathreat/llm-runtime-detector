@@ -25,6 +25,8 @@ class AttackType(Enum):
     ROLE_PLAYING_ESCAPE = "role_playing_escape"
     EMOJI_OBFUSCATION = "emoji_obfuscation"
     BASE64_PAYLOAD = "base64_payload"
+    UNICODE_CONFUSABLES = "unicode_confusables"
+    HOMOGRAPH_ATTACK = "homograph_attack"
 
 
 @dataclass
@@ -99,6 +101,17 @@ class InferenceAttackDetector:
             ],
             AttackType.BASE64_PAYLOAD.value: [
                 r"(?:[A-Za-z0-9+/]{4}){10,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?",
+            ],
+            AttackType.UNICODE_CONFUSABLES.value: [
+                r"[а-яё]",  # Cyrillic
+                r"[α-ω]",  # Greek
+                r"[ⅰ-ⅿ]",  # Roman numerals
+            ],
+            AttackType.HOMOGRAPH_ATTACK.value: [
+                r"рaypal",  # Cyrillic 'р' instead of 'p'
+                r"gооgle",  # Cyrillic 'о' instead of 'o'
+                r"аpple",  # Cyrillic 'а' instead of 'a'
+                r"mіcrosoft",  # Cyrillic 'і' instead of 'i'
             ],
         }
 
@@ -228,6 +241,8 @@ class InferenceAttackDetector:
             AttackType.ADVERSARIAL_SUFFIX.value: "medium",
             AttackType.ROLE_PLAYING_ESCAPE.value: "high",
             AttackType.TOKEN_SMUGGLING.value: "medium",
+            AttackType.UNICODE_CONFUSABLES.value: "high",
+            AttackType.HOMOGRAPH_ATTACK.value: "critical",
         }
         return severity_map.get(attack_type, "medium")
 
