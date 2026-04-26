@@ -5,6 +5,7 @@ Detects model weight tampering and memory corruption attacks.
 """
 
 import hashlib
+import json
 import struct
 import logging
 from typing import Dict, List, Optional, Any, Tuple

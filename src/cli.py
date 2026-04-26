@@ -11,11 +11,11 @@ import logging
 from pathlib import Path
 from typing import Optional, List
 
-from .model_loading import ModelLoadingScanner
-from .inference_attack import InferenceAttackDetector
-from .memory_safety import MemorySafetyValidator
-from .api_hardening import APIHardeningChecker
-from .output import ReportGenerator
+from model_loading import ModelLoadingScanner
+from inference_attack import InferenceAttackDetector
+from memory_safety import MemorySafetyValidator
+from api_hardening import APIHardeningChecker
+from output import ReportGenerator
 
 logging.basicConfig(
     level=logging.INFO,
