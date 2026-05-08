@@ -259,8 +259,8 @@ class APIHardeningChecker:
 
     def _get_timestamp(self) -> str:
         """Get current timestamp in ISO format."""
-        from datetime import datetime
-        return datetime.utcnow().isoformat() + 'Z'
+        from datetime import datetime, timezone
+        return datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
 
     def check_multiple(self, endpoints: List[Dict]) -> List[APIHardeningResult]:
         """Check multiple endpoints."""

@@ -5,7 +5,7 @@ Generates JSON and Markdown security reports.
 """
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Union
 from pathlib import Path
 
@@ -14,7 +14,7 @@ class ReportGenerator:
     """Generates security scan reports in multiple formats."""
 
     def __init__(self):
-        self.timestamp = datetime.utcnow().isoformat() + 'Z'
+        self.timestamp = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
 
     def generate_json(self, results: Union[Dict, List]) -> str:
         """Generate JSON report."""
